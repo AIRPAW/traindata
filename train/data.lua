@@ -1,8 +1,10 @@
 
-package.path = "/home/uml/.luarocks/share/lua/5.1/?.lua;/home/uml/.luarocks/share/lua/5.1/?/init.lua;/home/uml/torch/install/share/lua/5.1/?.lua;/home/uml/torch/install/share/lua/5.1/?/init.lua;./?.lua;/home/uml/torch/install/share/luajit-2.1.0-beta1/?.lua;/usr/local/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?/init.lua;/home/uml/torch/install/share/lua/5.2/?.lua;/home/uml/torch/install/share/lua/5.2/?/init.lua"
-package.cpath = "/home/uml/.luarocks/lib/lua/5.1/?.so;/home/uml/torch/install/lib/lua/5.1/?.so;/home/uml/torch/install/lib/?.so;./?.so;/usr/local/lib/lua/5.1/?.so;/usr/local/lib/lua/5.1/loadall.so;/home/uml/torch/install/lib/lua/5.2/?.so	"
+--package.path = package.path .. "~/torch/install/lib/luarocks/rocks"
+--package.cpath = package.cpath .. "~/torch/install/lib/luarocks/rocks"
 require 'torch'
 require 'image'
+
+torch.setdefaulttensortype(torch.FloatTensor)
 
 -- local traintDir = "/home/ira/working/images/"
 local traintDir = "/home/uml/working/traindata/images/"
@@ -11,7 +13,7 @@ local num = 10
 local size = {x = 200, y = 30}
 local category = {"button", "checkbox", "other"}
 local channels = 1
-local img = torch.Tensor(num*trsize,channels,size.x,size.y)
+local img = torch.Tensor(num*trsize,channels,size.y,size.x)
 local labels = torch.Tensor(num*trsize)
 local trainPortion = 0.9
 
@@ -29,13 +31,13 @@ local trainSize = math.floor(toMix:size()[1]*trainPortion)
 local testSize = toMix:size()[1] - trainSize
 
 trainData = {
-  img = torch.Tensor(trainSize, channels, size.x, size.y),
+  img = torch.Tensor(trainSize, channels, size.y,size.x),
   labels = torch.Tensor(trainSize),
   size = function() return trainSize end
 }
 
 testData = {
-  img = torch.Tensor(testSize, channels, size.x, size.y),
+  img = torch.Tensor(testSize, channels, size.y,size.x),
   labels = torch.Tensor(testSize),
   size = function() return testSize end
 }
@@ -43,10 +45,15 @@ testData = {
 for i = 1, trainSize do
   trainData.img[i] = img[toMix[i]]:clone()
   trainData.labels[i] = labels[toMix[i]]
-  --image.display(trainData.img[i][1])
 end
 
 for i = 1, testSize do
-  trainData.img[i] = img[toMix[i + trainSize]]:clone()
-  trainData.labels[i] = labels[toMix[i + trainSize]]
+  testData.img[i] = img[toMix[i + trainSize]]:clone()
+  testData.labels[i] = labels[toMix[i + trainSize]]
 end
+
+return {
+  trainData,
+  testData,
+  trsize
+}
