@@ -52,6 +52,8 @@ for i = 1, testSize do
   testData.labels[i] = labels[toMix[i + trainSize]]
 end
 
+print("dataset loaded")
+
 return {
   trainData,
   testData,
