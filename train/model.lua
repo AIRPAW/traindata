@@ -29,7 +29,7 @@ model:add(nn.ReLU())
 -- model:add(nn.Linear(64, 20))
 -- model:add(nn.ReLU())
 -- model:add(nn.Linear(20, 3))
-model:add(nn.LogSoftMax())
+--model:add(nn.LogSoftMax())
 
 loss = nn.ClassNLLCriterion()
 
@@ -46,5 +46,6 @@ return {
 -- model:add(nn.View(size.x*size.y*channels))
 -- model:add(nn.Linear(size.x*size.y*channels, 3))
 -- model:add(nn.ReLU())
--- give about 16% on test data
+
+-- give about 85% on test data and 20 epoches
 -------------------------------------------

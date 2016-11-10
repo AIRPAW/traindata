@@ -7,9 +7,9 @@ require 'torch'
 require 'image'
 
 config = {
-  batchSize         = 2,
+  batchSize         = 3,
   momentum          = 0,
-  learningRate      = 1e-3,
+  learningRate      = 1e-2,
   weightDecay       = 1e-5,
   learningRateDecay = 1e-7,
   save              = '/home/uml/working/traindata/models/',
