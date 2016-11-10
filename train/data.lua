@@ -6,14 +6,14 @@ require 'image'
 
 -- local traintDir = "/home/ira/working/images/"
 traintDir = "/home/uml/working/traindata/images/"
-local trsize = 3
+local trsize = 4
 num = 10
 size = {x = 200, y = 30}
-category = {"button", "checkbox", "other"}
+category = {"button", "checkbox", "input", "other"}
 channels = 1
 local img = torch.Tensor(num*trsize,channels,size.y,size.x)
 local labels = torch.Tensor(num*trsize)
-local trainPortion = 0.8
+local trainPortion = 0.7
 
 for i = 1,#category do
   local index = (i-1)*num

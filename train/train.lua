@@ -99,7 +99,6 @@ local function train(TrainData)
    time = time / TrainData:size()
    print("\n==> time to learn 1 sample = " .. (time*1000) .. 'ms')
 
-   print(sys.COLORS.green .. 'ConfusionMatrix:')
    print(confusion)
 
    -- update logger/plot
