@@ -29,7 +29,7 @@ model:add(nn.ReLU())
 -- model:add(nn.Linear(64, 20))
 -- model:add(nn.ReLU())
 -- model:add(nn.Linear(20, 3))
---model:add(nn.LogSoftMax())
+model:add(nn.LogSoftMax())
 
 loss = nn.ClassNLLCriterion()
 

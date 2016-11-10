@@ -16,6 +16,8 @@ config = {
   epochnm           = 20
 }
 
+torch.setdefaulttensortype('torch.DoubleTensor')
+
 local data  = require 'data'
 local train = require 'train'
 local test = require 'test'
