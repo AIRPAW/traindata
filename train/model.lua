@@ -8,12 +8,12 @@ require 'nngraph'
 
 model = nn.Sequential()
 --model:add(nn.SpatialConvolution(1,15 , 5, 5))
---print(w1)
-module = nn.Linear(100, 30)
-model:add(module)
 --print(module.weight)
 --print(module.bias)
+model:add(nn.View(size.x*size.y*channels))
+model:add(nn.Linear(size.x*size.y*channels, 3))
 model:add(nn.ReLU())
+--model:add(nn.Linear(size.x*size.y*channels+100, 3))
 -- model:add(nn.SpatialMaxPooling(2, 2, 2, 2))
 -- model:add(nn.Dropout(0.2))
 --

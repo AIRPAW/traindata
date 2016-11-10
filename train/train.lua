@@ -42,11 +42,7 @@ local yt = torch.Tensor(config.batchSize)
 local confusion = optim.ConfusionMatrix(category)
 local epoch
 
-print("size 2 = " .. trainData.img:size(2))
-print("size 3 = " .. trainData.img:size(3))
-print("size 4 = " .. trainData.img:size(4))
 local w,dE_dw = model:getParameters()
-print(w)
 
 local function train(TrainData)
 
@@ -116,11 +112,11 @@ local function train(TrainData)
   --  end
 
    -- save/log current net
-   local filename = traintDir.concat(config.save, 'model.net')
-   os.execute('mkdir -p ' .. sys.dirname('models'))
+   local filename = config.save
+   os.execute('mkdir -p ' .. sys.dirname(config.save .. 'models'))
    model1 = model:clone()
    netLighter(model1)
-   torch.save(filename, model1)
+   torch.save(filename .. 'models', model1)
 
    -- next epoch
    confusion:zero()
