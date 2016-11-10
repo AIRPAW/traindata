@@ -5,7 +5,9 @@ require 'torch'
 require 'optim'
 require 'xlua'
 
-local t = require 'model'
+model_file = '/home/uml/working/traindata/models/model.net'
+
+local t = torch.load(model_file)
 local model = t.model
 local loss = t.loss
 
