@@ -53,7 +53,7 @@ local function train(TrainData)
    print(sys.COLORS.green .. '==> doing epoch on training data:')
    print("==> online epoch # " .. epoch)
    for t = 1,TrainData:size(),config.batchSize do
-     xlua.progress(t, TrainData:size())
+      xlua.progress(t, TrainData:size())
       collectgarbage()
 
       if (t + config.batchSize - 1) > TrainData:size() then
@@ -74,7 +74,7 @@ local function train(TrainData)
 
          -- evaluate function for complete mini batch
          local y = model:forward(x)
-         print("y size = " .. y:size()[1])
+         --print("y size = " .. y:size()[1])
          local E = loss:forward(y,yt)
 
          -- estimate df/dW
@@ -99,7 +99,6 @@ local function train(TrainData)
    time = time / TrainData:size()
    print("\n==> time to learn 1 sample = " .. (time*1000) .. 'ms')
 
-   -- print confusion matrix
    print(sys.COLORS.green .. 'ConfusionMatrix:')
    print(confusion)
 

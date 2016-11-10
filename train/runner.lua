@@ -13,12 +13,12 @@ config = {
   weightDecay       = 1e-5,
   learningRateDecay = 1e-7,
   save              = '/home/uml/working/traindata/models/',
-  epochnm           = 150
+  epochnm           = 20
 }
 
 local data  = require 'data'
 local train = require 'train'
-local train = require 'test'
+local test = require 'test'
 
 local k = 1
 while k < config.epochnm do

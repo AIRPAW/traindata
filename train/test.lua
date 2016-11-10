@@ -21,7 +21,7 @@ function test(TestData)
 
    local time = sys.clock()
 
-   --print(sys.COLORS.red .. '==> testing on test set:')
+   print(sys.COLORS.red .. '==> testing on test set:')
    for t = 1,TestData:size(),config.batchSize do
 
       xlua.progress(t, TestData:size())
@@ -48,7 +48,7 @@ function test(TestData)
    time = time / TestData:size()
    print("\n==> time to test 1 sample = " .. (time*1000) .. 'ms')
 
-   --print(confusion)
+   print(confusion)
 
   --  testLogger:add{['% mean class accuracy (test set)'] = confusion.totalValid * 100}
   --  if config.plot then
