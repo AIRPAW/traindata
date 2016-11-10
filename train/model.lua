@@ -40,3 +40,11 @@ return {
   model = model,
   loss = loss
 }
+
+
+------- test model 1 ----------------------
+-- model:add(nn.View(size.x*size.y*channels))
+-- model:add(nn.Linear(size.x*size.y*channels, 3))
+-- model:add(nn.ReLU())
+-- give about 16% on test data
+-------------------------------------------

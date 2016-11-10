@@ -2,9 +2,8 @@
 --package.path = package.path .. "~/torch/install/lib/luarocks/rocks"
 --package.cpath = package.cpath .. "~/torch/install/lib/luarocks/rocks"
 require 'torch'
-require 'image'
-require 'nn'
 require 'optim'
+require 'xlua'
 
 local t = require 'model'
 local model = t.model
@@ -54,7 +53,7 @@ local function train(TrainData)
    print(sys.COLORS.green .. '==> doing epoch on training data:')
    print("==> online epoch # " .. epoch)
    for t = 1,TrainData:size(),config.batchSize do
-      xlua.progress(t, TrainData:size())
+     xlua.progress(t, TrainData:size())
       collectgarbage()
 
       if (t + config.batchSize - 1) > TrainData:size() then

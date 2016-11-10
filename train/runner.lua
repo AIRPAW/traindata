@@ -7,18 +7,22 @@ require 'torch'
 require 'image'
 
 config = {
-  batchSize         = 3,
+  batchSize         = 2,
   momentum          = 0,
   learningRate      = 1e-3,
   weightDecay       = 1e-5,
   learningRateDecay = 1e-7,
   save              = '/home/uml/working/traindata/models/',
-  dif               = 1e-5
+  epochnm           = 150
 }
 
 local data  = require 'data'
 local train = require 'train'
+local train = require 'test'
 
-while true do
+local k = 1
+while k < config.epochnm do
    train(trainData)
+   test(testData)
+   k = k + 1
 end
