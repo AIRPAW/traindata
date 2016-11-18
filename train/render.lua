@@ -1,59 +1,36 @@
 
---package.path = package.path .. "~/torch/install/lib/luarocks/rocks"
---package.cpath = package.cpath .. "~/torch/install/lib/luarocks/rocks"
+--package.path = package.path .. "/home/uml/torch-opencv/modules"
+--package.cpath = package.cpath .. "/home/uml/torch-opencv/modules"
 require 'torch'
 require 'image'
+require 'paths'
 
--- local traintDir = "/home/ira/working/images/"
-traintDir = "/home/uml/working/traindata/images/"
-local trsize = 4
-num = 10
-size = {x = 200, y = 30}
-category = {"button", "checkbox", "input", "other"}
-channels = 1
-local img = torch.Tensor(num*trsize,channels,size.y,size.x)
-local labels = torch.Tensor(num*trsize)
-local trainPortion = 0.7
+local cv = require 'cv'
+require 'cv.imgproc'
+require 'cv.imgcodecs'
 
-for i = 1,#category do
-  local index = (i-1)*num
-  local name = traintDir .. category[i] .. "/"
-  for j = 1, num do
-    img[index+j] = image.load(name ..category[i] ..j..".jpg")
-    labels[index+j] = i
-  end
+local dataDir = "/home/uml/working/traindata/images_/"
+local pathToSave = "/home/uml/working/traindata/render_images/"
+local loadType = cv.IMREAD_GRAYSCALE
+size = {200, 30}
+
+
+paths.rmall(pathToSave,"yes")
+paths.mkdir(pathToSave)
+
+for dir in paths.iterdirs(dataDir) do
+   print(sys.COLORS.red .. "do files from " .. dir)
+   local k = 1;
+   local imagePath = dataDir .. dir .. '/'
+   local saveDir = pathToSave .. dir .. '/'
+   paths.mkdir(pathToSave .. dir)
+   for file in paths.iterfiles(imagePath) do
+     im = cv.imread{imagePath .. file, loadType}
+     local dst = im:clone()
+     cv.adaptiveThreshold{src = im,dst = dst, maxValue=255, adaptiveMethod=cv.ADAPTIVE_THRESH_GAUSSIAN_C, thresholdType=cv.THRESH_BINARY_INV, blockSize=11, C=2}
+     local dst_save = cv.resize{dst, size, interpolation=cv.INTER_CUBIC}
+     local file_name = dir .. k .. ".jpg"
+     cv.imwrite{saveDir ..file_name, dst_save}
+     k = k+1
+   end
 end
-
-local toMix = torch.randperm(labels:size()[1])
-local trainSize = math.floor(toMix:size()[1]*trainPortion)
-local testSize = toMix:size()[1] - trainSize
-
-trainData = {
-  img = torch.Tensor(trainSize, channels, size.y,size.x),
-  labels = torch.Tensor(trainSize),
-  size = function() return trainSize end
-}
-
-testData = {
-  img = torch.Tensor(testSize, channels, size.y,size.x),
-  labels = torch.Tensor(testSize),
-  size = function() return testSize end
-}
-
-for i = 1, trainSize do
-  trainData.img[i] = img[toMix[i]]:clone()
-  trainData.labels[i] = labels[toMix[i]]
-end
-
-for i = 1, testSize do
-  testData.img[i] = img[toMix[i + trainSize]]:clone()
-  testData.labels[i] = labels[toMix[i + trainSize]]
-end
-
-print("dataset loaded")
-
-return {
-  trainData,
-  testData,
-  trsize
-}
