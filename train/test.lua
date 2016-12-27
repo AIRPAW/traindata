@@ -49,12 +49,10 @@ function test(TestData)
    print("\n==> time to test 1 sample = " .. (time*1000) .. 'ms')
 
    print(confusion)
+   if with_plotting then
+     plotting.valids_test[plotting.epoch_ind] = confusion.totalValid;
+   end
 
-  --  testLogger:add{['% mean class accuracy (test set)'] = confusion.totalValid * 100}
-  --  if config.plot then
-  --     testLogger:style{['% mean class accuracy (test set)'] = '-'}
-  --     testLogger:plot()
-  --  end
    confusion:zero()
 
 end
