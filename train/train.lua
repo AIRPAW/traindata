@@ -101,18 +101,11 @@ local function train(TrainData)
 
    print(confusion)
 
-   -- update logger/plot
-  --  trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
-  --  if config.plot then
-  --     trainLogger:style{['% mean class accuracy (train set)'] = '-'}
-  --     trainLogger:plot()
-  --  end
-
    -- save/log current net
    local filename = config.save
    os.execute('mkdir -p ' .. sys.dirname(config.save .. 'models'))
    model1 = model:clone()
-   netLighter(model1)
+  -- netLighter(model1)
    torch.save(filename .. 'models', model1)
 
    -- next epoch
