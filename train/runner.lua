@@ -1,6 +1,6 @@
 
-package.path = package.path .. "~/working/traindata/train"
-package.cpath = package.cpath .. "~/working/traindata/train"
+package.path = package.path .. "/home/uml/working/traindata/train"
+package.cpath = package.cpath .. "/home/uml/working/traindata/train"
 require 'pl'
 require 'trepl'
 require 'torch'
@@ -14,8 +14,9 @@ config = {
   weightDecay       = 1e-5,
   learningRateDecay = 1e-7,
   save              = '/home/uml/working/traindata/models/',
-  epochnm           = 20,
-  with_plotting     = true
+  epochnm           = 15,
+  with_plotting     = true,
+  data_file_path    = '/home/uml/working/traindata/data/save.dat'
 }
 
 torch.setdefaulttensortype('torch.DoubleTensor')
@@ -24,23 +25,33 @@ local data  = require 'data'
 local train = require 'train'
 local test = require 'test'
 
-if with_plotting then
   plotting = {
-
-    x = torch.linspace(1,config.epochnm),
-    valids_train = torch.Tensor(3, config.epochnm),
-    valids_test = torch.Tensor(config.epochnm),
-    epoch_ind = 0
+    valids = {},
+    epoch_ind = 0,
   }
+
+local meta = {}
+function meta.__call(t, ind)
+  return t[ind][1], t[ind][2], t[ind][3]
 end
+setmetatable(plotting.valids,meta)
 
 local k = 1
 while k <= config.epochnm do
    plotting.epoch_ind = k;
+   plotting.valids[plotting.epoch_ind] = {}
+   plotting.valids[plotting.epoch_ind][1] = k
    train(trainData)
    test(testData)
    k = k + 1
 end
-gnuplot.grid(true)
-gnuplot.plotflush();
-gnuplot.plot({'train',plotting.valids_train,'~'}, {'test', plotting.valids_test,'~'})
+
+if config.with_plotting then
+  local dataf = io.open(config.data_file_path, 'w')
+  for i = 1, plotting.epoch_ind do
+   dataf:write(string.format('%d %f %f\n', plotting.valids(i)))
+  end
+  dataf:close()
+  local plotv = require 'plotv'
+  plotv.plotv(config.data_file_path)
+end

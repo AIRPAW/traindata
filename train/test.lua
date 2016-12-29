@@ -49,8 +49,8 @@ function test(TestData)
    print("\n==> time to test 1 sample = " .. (time*1000) .. 'ms')
 
    print(confusion)
-   if with_plotting then
-     plotting.valids_test[plotting.epoch_ind] = confusion.totalValid;
+   if config.with_plotting then
+     plotting.valids[plotting.epoch_ind][3] = confusion.totalValid;
    end
 
    confusion:zero()

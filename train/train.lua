@@ -100,8 +100,8 @@ local function train(TrainData)
    print("\n==> time to learn 1 sample = " .. (time*1000) .. 'ms')
 
    print(confusion)
-   if with_plotting then
-     plotting.valids_train[plotting.epoch_ind] = confusion.totalValid;
+   if config.with_plotting then
+     plotting.valids[plotting.epoch_ind][2] = confusion.totalValid;
    end
 
    -- save/log current net
