@@ -5,11 +5,12 @@ require 'torch'
 require 'optim'
 require 'xlua'
 
+local config = require 'config'
 local t = require 'model'
 local model = t.model
 local loss = t.loss
 
-local confusion = optim.ConfusionMatrix(category)
+local confusion = optim.ConfusionMatrix(config.categories)
 
 --local testLogger = optim.Logger(paths.concat(config.save, 'test.log'))
 

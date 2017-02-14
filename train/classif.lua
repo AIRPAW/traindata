@@ -7,14 +7,14 @@ require 'image'
 require 'nn'
 require 'nngraph'
 
-model_file = '/home/uml/working/traindata/models/models'
-test_path = '/home/uml/working/traindata/test_img/'
+model_file = '/home/sbt-voronova-id/traindata/models/models'
+test_path = '/home/sbt-voronova-id/traindata/test_img/'
 
 torch.setdefaulttensortype('torch.DoubleTensor')
-
-local channels = 1
-local size = {x = 200, y = 30}
-local category = {"button", "chkbox", "input", "other"}
+local config = require 'config'
+local channels = config.channels
+local size = config.size
+local categories = config.categories
 local name_img = arg[1]
 
 local config = {
@@ -38,9 +38,9 @@ local mx, max_i = torch.max(p, 1)
 
 for i = 1, predicted:size(1) do
   if (max_i[1] == i) then
-    print(sys.COLORS.green .. category[i], torch.exp(predicted[i]))
+    print(sys.COLORS.green .. categories[i], torch.exp(predicted[i]))
   else
-    print(sys.COLORS.white .. category[i], torch.exp(predicted[i]))
+    print(sys.COLORS.white .. categories[i], torch.exp(predicted[i]))
   end
   p = p + torch.exp(predicted[i])
 end

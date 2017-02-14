@@ -1,23 +1,13 @@
 
-package.path = package.path .. "/home/uml/working/traindata/train"
-package.cpath = package.cpath .. "/home/uml/working/traindata/train"
+package.path = package.path .. "/home/sbt-voronova-id/traindata/train"
+package.cpath = package.cpath .. "/home/sbt-voronova-id/traindata/train"
 require 'pl'
 require 'trepl'
 require 'torch'
 require 'image'
 require 'gnuplot'
 
-config = {
-  batchSize         = 3,
-  momentum          = 0,
-  learningRate      = 1e-2,
-  weightDecay       = 1e-5,
-  learningRateDecay = 1e-7,
-  save              = '/home/uml/working/traindata/models/',
-  epochnm           = 15,
-  with_plotting     = true,
-  data_file_path    = '/home/uml/working/traindata/data/save.dat'
-}
+local config = require 'config'
 
 torch.setdefaulttensortype('torch.DoubleTensor')
 

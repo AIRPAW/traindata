@@ -6,13 +6,14 @@ require 'image'
 require 'paths'
 
 local cv = require 'cv'
+local config = require 'config'
 require 'cv.imgproc'
 require 'cv.imgcodecs'
 
-local dataDir = "/home/uml/working/traindata/images_/"
-local pathToSave = "/home/uml/working/traindata/render_images/"
+local dataDir = config.localPath .. "/images_/"
+local pathToSave = localPath .. "/render_images/"
 local loadType = cv.IMREAD_GRAYSCALE
-size = {200, 30}
+local size = config.size
 
 
 paths.rmall(pathToSave,"yes")

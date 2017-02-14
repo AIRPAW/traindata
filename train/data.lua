@@ -4,22 +4,23 @@
 require 'torch'
 require 'image'
 
--- local traintDir = "/home/ira/working/images/"
-traintDir = "/home/uml/working/traindata/images/"
-local trsize = 4
-num = 10
-size = {x = 200, y = 30}
-category = {"button", "checkbox", "input", "other"}
-channels = 1
+local config = require 'config'
+traintDir = config.pathToImages
+
+local num = config.numImages
+local size = config.imagesSize
+local categories = config.categories
+local trsize = #categories
+local channels = config.channels
 local img = torch.Tensor(num*trsize,channels,size.y,size.x)
 local labels = torch.Tensor(num*trsize)
-local trainPortion = 0.7
+local trainPortion = config.trainPortion
 
-for i = 1,#category do
+for i = 1,#categories do
   local index = (i-1)*num
-  local name = traintDir .. category[i] .. "/"
+  local name = traintDir .. categories[i] .. "/"
   for j = 1, num do
-    img[index+j] = image.load(name ..category[i] ..j..".jpg")
+    img[index+j] = image.load(name ..categories[i] ..j..".jpg")
     labels[index+j] = i
   end
 end

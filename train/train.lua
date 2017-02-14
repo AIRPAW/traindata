@@ -5,6 +5,7 @@ require 'torch'
 require 'optim'
 require 'xlua'
 
+local config = require 'config'
 local t = require 'model'
 local model = t.model
 local fwmodel = t.model
@@ -38,7 +39,7 @@ end
 local x = torch.Tensor(config.batchSize,trainData.img:size(2),
          trainData.img:size(3), trainData.img:size(4))
 local yt = torch.Tensor(config.batchSize)
-local confusion = optim.ConfusionMatrix(category)
+local confusion = optim.ConfusionMatrix(config.categories)
 local epoch
 
 local w,dE_dw = model:getParameters()

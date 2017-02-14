@@ -5,13 +5,14 @@ require 'torch'
 require 'image'
 require 'nn'
 require 'nngraph'
+local config = require 'config'
 
 model = nn.Sequential()
 --model:add(nn.SpatialConvolution(1,15 , 5, 5))
 --print(module.weight)
 --print(module.bias)
-model:add(nn.View(size.x*size.y*channels))
-model:add(nn.Linear(size.x*size.y*channels, 4))
+model:add(nn.View(config.imagesSize.x*config.imagesSize.y*config.channels))
+model:add(nn.Linear(config.imagesSize.x*config.imagesSize.y*config.channels, 4))
 model:add(nn.ReLU())
 --model:add(nn.Linear(size.x*size.y*channels+100, 3))
 -- model:add(nn.SpatialMaxPooling(2, 2, 2, 2))
