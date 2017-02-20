@@ -106,11 +106,11 @@ local function train(TrainData)
    end
 
    -- save/log current net
-   local filename = config.save
-   os.execute('mkdir -p ' .. sys.dirname(config.save .. 'models'))
+   local filename = config.modelPath
+   os.execute('mkdir -p ' .. sys.dirname(config.modelPath))
    model1 = model:clone()
   -- netLighter(model1)
-   torch.save(filename .. 'models', model1)
+   torch.save(filename .. 'model', model1)
 
    -- next epoch
    confusion:zero()

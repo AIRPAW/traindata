@@ -7,25 +7,18 @@ require 'image'
 require 'nn'
 require 'nngraph'
 
-model_file = '/home/sbt-voronova-id/traindata/models/models'
-test_path = '/home/sbt-voronova-id/traindata/test_img/'
+local config = require 'config'
+
+local model_file = config.modelPath .. 'model'
+local test_path = config.pathToTestImages
 
 torch.setdefaulttensortype('torch.DoubleTensor')
-local config = require 'config'
 local channels = config.channels
 local size = config.size
 local categories = config.categories
 local name_img = arg[1]
 
-local config = {
-  momentum          = 0,
-  learningRate      = 1e-2,
-  weightDecay       = 1e-5,
-  learningRateDecay = 1e-7,
-}
-
 local m = torch.load(model_file)
-
 local input = image.load(test_path .. name_img)
 local inp = torch.Tensor(input)
 local predicted = m:forward(inp)
