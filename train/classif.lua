@@ -23,17 +23,12 @@ local input = image.load(test_path .. name_img)
 local inp = torch.Tensor(input)
 local predicted = m:forward(inp)
 
-image.display(input)
-print("predicted: ")
-print(predicted)
 local p = torch.exp(predicted)
 local mx, max_i = torch.max(p, 1)
 
 for i = 1, predicted:size(1) do
   if (max_i[1] == i) then
-    print(sys.COLORS.green .. categories[i], torch.exp(predicted[i]))
-  else
-    print(sys.COLORS.white .. categories[i], torch.exp(predicted[i]))
+    print(sys.COLORS.green .. categories[i])
   end
   p = p + torch.exp(predicted[i])
 end
