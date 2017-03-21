@@ -15,13 +15,12 @@ local config = {
   modelPath         = localPath.getLocalPath() .. 'models/',
   with_plotting     = true,
   data_file_path    = localPath.getLocalPath() .. 'data/save.dat',
-  pathToImages      = localPath.getLocalPath() .. 'images/',
+  pathToImages      = localPath.getLocalPath() .. 'images/source_images/',
   pathToTestImages  = localPath.getLocalPath() .. 'test_img/',
   categories        = {},
   imagesSize        = {x = 200, y = 30},
   channels          = 1,
   trainPortion      = 0.7,
-  numImages         = 10
 }
 
 
