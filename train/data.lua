@@ -10,21 +10,34 @@ traintDir = config.pathToImages
 local num = config.numImages
 local size = config.imagesSize
 local categories = config.categories
-local trsize = #categories
 local channels = config.channels
-local img = torch.Tensor(num*trsize,channels,size.y,size.x)
-local labels = torch.Tensor(num*trsize)
 local trainPortion = config.trainPortion
 
-for i = 1,#categories do
-  local index = (i-1)*num
-  local name = traintDir .. categories[i] .. "/"
-  for j = 1, num do
-    img[index+j] = image.load(name ..categories[i] ..j..".jpg")
-    labels[index+j] = i
+local imgStore = {}
+local lablesStore = {}
+local singleImgTensor = torch.Tensor(channels,size.y,size.x)
+
+local lowerPath = config.pathToImages
+local curCategory = 1
+for dir in paths.iterdirs(lowerPath) do
+  local curCategoryDir = lowerPath .. dir .. '/'
+  config.categories[curCategory] = dir
+  for file in paths.iterfiles(curCategoryDir) do
+      singleImgTensor = image.load(curCategoryDir .. file)
+      table.insert(imgStore, singleImgTensor)
+      table.insert(lablesStore, curCategory)
   end
+  curCategory = curCategory + 1
 end
 
+print(config.categories)
+
+local trsize = #config.categories
+local img = torch.Tensor(#imgStore, channels, size.y, size.x)
+for i = 1, #imgStore do
+  img[i] = imgStore[i]
+end
+local labels = torch.Tensor(lablesStore)
 local toMix = torch.randperm(labels:size()[1])
 local trainSize = math.floor(toMix:size()[1]*trainPortion)
 local testSize = toMix:size()[1] - trainSize
