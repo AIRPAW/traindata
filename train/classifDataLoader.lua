@@ -3,42 +3,63 @@ require 'torch'
 require 'image'
 require 'paths'
 
-classifDataLoader.classifLoader = function()
+classifDataLoader.classifLoader = function(config)
+  local traintDir = config.pathToImages
+  local size = config.imagesSize
+  local categories = config.categories
+  local channels = config.channels
+  local trainPortion = config.trainPortion
+  local imgStore = {}
+  local lablesStore = {}
+  local singleImgTensor = torch.Tensor(channels,size.y,size.x)
 
-end
-traintDir = config.pathToImages
-
-local num = config.numImages
-local size = config.imagesSize
-local categories = config.categories
-local channels = config.channels
-local trainPortion = config.trainPortion
-
-local imgStore = {}
-local lablesStore = {}
-local singleImgTensor = torch.Tensor(channels,size.y,size.x)
-
-local lowerPath = config.pathToImages
-local curCategory = 1
-for dir in paths.iterdirs(lowerPath) do
-  local curCategoryDir = lowerPath .. dir .. '/'
-  config.categories[curCategory] = dir
-  for file in paths.iterfiles(curCategoryDir) do
-      singleImgTensor = image.load(curCategoryDir .. file)
-      table.insert(imgStore, singleImgTensor)
-      table.insert(lablesStore, curCategory)
+  local curCategory = 1
+  for dir in paths.iterdirs(pathToImages) do
+    local curCategoryDir = pathToImages .. dir .. '/'
+    config.categories[curCategory] = dir
+    for file in paths.iterfiles(curCategoryDir) do
+        singleImgTensor = image.load(curCategoryDir .. file)
+        table.insert(imgStore, singleImgTensor)
+        table.insert(lablesStore, curCategory)
+    end
+    curCategory = curCategory + 1
   end
-  curCategory = curCategory + 1
+
+  local trsize = #config.categories
+  local labels = torch.Tensor(lablesStore)
+  local toMix = torch.randperm(labels:size()[1])
+  local trainSize = math.floor(toMix:size()[1]*trainPortion)
+  local testSize = toMix:size()[1] - trainSize
+
+  local trainData = {
+    img = torch.Tensor(trainSize, channels, size.y,size.x),
+    labels = torch.Tensor(trainSize),
+    size = function() return trainSize end
+  }
+
+  local testData = {
+    img = torch.Tensor(testSize, channels, size.y,size.x),
+    labels = torch.Tensor(testSize),
+    size = function() return testSize end
+  }
+
+  for i = 1, trainSize do
+    trainData.img[i] = imgStore[toMix[i]]:clone()
+    trainData.labels[i] = lablesStore[toMix[i]]
+  end
+
+  for i = 1, testSize do
+    testData.img[i] = imgStore[toMix[i + trainSize]]:clone()
+    testData.labels[i] = lablesStore[toMix[i + trainSize]]
+  end
+
+  collectgarbage()
+
+  return {
+    trainData,
+    testData,
+    trsize
+  }
 end
 
-print(config.categories)
-
-
-
-print("dataset loaded")
-
-return {
-  trainData,
-  testData,
-  trsize
-}
+return classifDataLoader
