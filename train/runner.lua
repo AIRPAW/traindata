@@ -8,12 +8,14 @@ require 'image'
 require 'gnuplot'
 
 local config = require 'config'
+local loader = require 'dataSetLoader'
+local segHandler = require "coloredDataloader"
+local elementsHandler = require "classifDataLoader"
+
 
 torch.setdefaulttensortype('torch.DoubleTensor')
-
-local data  = require 'data'
-local train = require 'train'
-local test = require 'test'
+-- local train = require 'train'
+-- local test = require 'test'
 
   plotting = {
     valids = {},
@@ -26,22 +28,32 @@ function meta.__call(t, ind)
 end
 setmetatable(plotting.valids,meta)
 
-local k = 1
-while k <= config.epochnm do
-   plotting.epoch_ind = k;
-   plotting.valids[plotting.epoch_ind] = {}
-   plotting.valids[plotting.epoch_ind][1] = k
-   train(trainData)
-   test(testData)
-   k = k + 1
-end
+loader:setLoader(elementsHandler.classifLoader)
+local data = loader:loadData({
+  pathToImages = config.pathToImages,
+  imagesSize = config.imagesSize,
+  categories = config.categories,
+  channels = config.channels,
+  trainPortion = config.trainPortion
+})
+print(config.categories)
 
-if config.with_plotting then
-  local dataf = io.open(config.data_file_path, 'w')
-  for i = 1, plotting.epoch_ind do
-   dataf:write(string.format('%d %f %f\n', plotting.valids(i)))
-  end
-  dataf:close()
-  local plotv = require 'plotv'
-  plotv.plotv(config.data_file_path)
-end
+-- local k = 1
+-- while k <= config.epochnm do
+--    plotting.epoch_ind = k;
+--    plotting.valids[plotting.epoch_ind] = {}
+--    plotting.valids[plotting.epoch_ind][1] = k
+--    train(trainData)
+--    test(testData)
+--    k = k + 1
+-- end
+--
+-- if config.with_plotting then
+--   local dataf = io.open(config.data_file_path, 'w')
+--   for i = 1, plotting.epoch_ind do
+--    dataf:write(string.format('%d %f %f\n', plotting.valids(i)))
+--   end
+--   dataf:close()
+--   local plotv = require 'plotv'
+--   plotv.plotv(config.data_file_path)
+-- end

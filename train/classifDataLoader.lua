@@ -14,8 +14,8 @@ classifDataLoader.classifLoader = function(config)
   local singleImgTensor = torch.Tensor(channels,size.y,size.x)
 
   local curCategory = 1
-  for dir in paths.iterdirs(pathToImages) do
-    local curCategoryDir = pathToImages .. dir .. '/'
+  for dir in paths.iterdirs(traintDir) do
+    local curCategoryDir = traintDir .. dir .. '/'
     config.categories[curCategory] = dir
     for file in paths.iterfiles(curCategoryDir) do
         singleImgTensor = image.load(curCategoryDir .. file)
@@ -42,7 +42,7 @@ classifDataLoader.classifLoader = function(config)
     labels = torch.Tensor(testSize),
     size = function() return testSize end
   }
-
+  
   for i = 1, trainSize do
     trainData.img[i] = imgStore[toMix[i]]:clone()
     trainData.labels[i] = lablesStore[toMix[i]]

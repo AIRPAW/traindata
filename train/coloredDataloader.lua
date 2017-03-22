@@ -3,7 +3,7 @@ require 'torch'
 require 'image'
 require 'paths'
 
-coloredDataloader.coloerdLoader = function(this, config)
+coloredDataloader.coloerdLoader = function(config)
   if config == nil then
     error("Set configuration for screen loader")
   else
@@ -22,41 +22,40 @@ coloredDataloader.coloerdLoader = function(this, config)
       table.insert(imgStore, singleImgTensor)
       table.insert(markedStore, singleMarkTensor)
     end
+
+    local toMix = torch.randperm(#imgStore)
+    local trainSize = math.floor(toMix:size()[1]*trainPortion)
+    local testSize = toMix:size()[1] - trainSize
+    local trainData = {
+      img = torch.Tensor(trainSize, channels, size.y,size.x),
+      marks = torch.Tensor(trainSize, channels, size.y,size.x),
+      size = function() return trainSize end
+    }
+
+    local testData = {
+      img = torch.Tensor(testSize, channels, size.y,size.x),
+      marks = torch.Tensor(testSize, channels, size.y,size.x),
+      size = function() return testSize end
+    }
+
+    for i = 1, trainSize do
+      trainData.img[i] = imgStore[toMix[i]]:clone()
+      trainData.marks[i] = markedStore[toMix[i]]:clone()
+    end
+
+    for i = 1, testSize do
+      testData.img[i] = imgStore[toMix[i + trainSize]]:clone()
+      testData.marks[i] = markedStore[toMix[i + trainSize]]:clone()
+    end
+
+    collectgarbage()
+
+    return {
+      trsize,
+      trainData,
+      testData
+    }
   end
-
-  local toMix = torch.randperm(imgStore:size()[1])
-  local trainSize = math.floor(toMix:size()[1]*trainPortion)
-  local testSize = toMix:size()[1] - trainSize
-
-  local trainData = {
-    img = torch.Tensor(trainSize, channels, size.y,size.x),
-    marks = torch.Tensor(trainSize),
-    size = function() return trainSize end
-  }
-
-  local testData = {
-    img = torch.Tensor(testSize, channels, size.y,size.x),
-    marks = torch.Tensor(testSize),
-    size = function() return testSize end
-  }
-
-  for i = 1, trainSize do
-    trainData.img[i] = imgStore[toMix[i]]:clone()
-    trainData.marks[i] = markedStore[toMix[i]]
-  end
-
-  for i = 1, testSize do
-    testData.img[i] = imgStore[toMix[i + trainSize]]:clone()
-    testData.marks[i] = markedStore[toMix[i + trainSize]]
-  end
-
-  collectgarbage()
-
-  return {
-    trsize,
-    trainData,
-    testData
-  }
 end
 
 return coloredDataloader
