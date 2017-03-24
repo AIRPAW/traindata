@@ -101,12 +101,13 @@ local function train(TrainData)
   --  end
 
    -- save/log current net
-   local filename = config.modelPath
-   os.execute('mkdir -p ' .. sys.dirname(config.modelPath))
-   model1 = model:clone()
-   netLighter(model1)
-   torch.save(filename .. 'model', model1)
-   model1 = nil
+   if epoch >= epochnm then
+     local filename = config.modelPath
+     os.execute('mkdir -p ' .. sys.dirname(config.modelPath))
+     netLighter(model)
+     torch.save(filename .. 'model', model)
+     model1 = nil
+   end
    -- next epoch
    epoch = epoch + 1
 end
