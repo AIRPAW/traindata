@@ -10,11 +10,10 @@ require 'gnuplot'
 local config = require 'config'
 local loader = require 'dataSetLoader'
 local segHandler = require "coloredDataloader"
-local elementsHandler = require "classifDataLoader"
 
 
-torch.setdefaulttensortype('torch.DoubleTensor')
--- local train = require 'train'
+torch.setdefaulttensortype('torch.FloatTensor')
+local train = require 'train'
 -- local test = require 'test'
 
   plotting = {
@@ -28,7 +27,7 @@ function meta.__call(t, ind)
 end
 setmetatable(plotting.valids,meta)
 
-loader:setLoader(elementsHandler.classifLoader)
+loader:setLoader(segHandler.coloerdLoader)
 local data = loader:loadData({
   pathToImages = config.pathToImages,
   imagesSize = config.imagesSize,
@@ -36,17 +35,17 @@ local data = loader:loadData({
   channels = config.channels,
   trainPortion = config.trainPortion
 })
-print(config.categories)
 
--- local k = 1
--- while k <= config.epochnm do
---    plotting.epoch_ind = k;
---    plotting.valids[plotting.epoch_ind] = {}
---    plotting.valids[plotting.epoch_ind][1] = k
---    train(trainData)
---    test(testData)
---    k = k + 1
--- end
+collectgarbage()
+local k = 1
+while k <= config.epochnm do
+   plotting.epoch_ind = k;
+   plotting.valids[plotting.epoch_ind] = {}
+   plotting.valids[plotting.epoch_ind][1] = k
+   train(data.trainData)
+  --  test(testData)
+   k = k + 1
+end
 --
 -- if config.with_plotting then
 --   local dataf = io.open(config.data_file_path, 'w')

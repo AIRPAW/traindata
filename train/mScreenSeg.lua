@@ -6,47 +6,34 @@ require 'image'
 require 'nn'
 require 'nngraph'
 local config = require 'config'
+local pooling = nn.SpatialMaxPooling(2, 2, 2, 2)
+mScreenSeg = nn.Sequential()
+mScreenSeg:add(nn.SpatialConvolution(config.channels, 16, 25, 25))
+mScreenSeg:add(nn.ReLU())
+mScreenSeg:add(pooling)
 
-model = nn.Sequential()
---model:add(nn.SpatialConvolution(1,15 , 5, 5))
---print(module.weight)
---print(module.bias)
-model:add(nn.View(config.imagesSize.x*config.imagesSize.y*config.channels))
-model:add(nn.Linear(config.imagesSize.x*config.imagesSize.y*config.channels, #config.categories))
-model:add(nn.ReLU())
---model:add(nn.Linear(size.x*size.y*channels+100, 3))
--- model:add(nn.SpatialMaxPooling(2, 2, 2, 2))
--- model:add(nn.Dropout(0.2))
---
--- model:add(nn.SpatialConvolution(16, 32, 5, 5))
--- model:add(nn.ReLU()) --
--- model:add(nn.SpatialMaxPooling(2, 2, 2, 2))
--- model:add(nn.Dropout(0.2))
---
---  model:add(nn.View(27*32*4*47))
--- model:add(nn.Linear(4*4*32, 64))
--- model:add(nn.ReLU()) --
--- model:add(nn.Dropout(0.2))
--- model:add(nn.Linear(64, 20))
--- model:add(nn.ReLU())
--- model:add(nn.Linear(20, 3))
-model:add(nn.LogSoftMax())
+mScreenSeg:add(nn.SpatialConvolution(16, 32, 15, 15))
+mScreenSeg:add(nn.ReLU())
+-- mScreenSeg:add(nn.SpatialMaxPooling(2, 2, 2, 2))
 
-loss = nn.ClassNLLCriterion()
+mScreenSeg:add(nn.SpatialConvolution(32, 64, 5, 5))
+mScreenSeg:add(nn.ReLU())
+-- mScreenSeg:add(nn.SpatialMaxPooling(2, 2, 2, 2))
+
+mScreenSeg:add(nn.SpatialFullConvolution(64, 32, 5, 5))
+
+mScreenSeg:add(nn.SpatialFullConvolution(32, 16, 15, 15))
+mScreenSeg:add(nn.SpatialMaxUnpooling(pooling))
+mScreenSeg:add(nn.SpatialFullConvolution(16, config.channels, 25, 25))
+
+mScreenSeg:add(nn.SpatialSoftMax())
+
+loss = nn.SmoothL1Criterion()
 
 print("Model data:")
-print(model)
+print(mScreenSeg)
 
 return {
-  model = model,
+  model = mScreenSeg,
   loss = loss
 }
-
-
-------- test model 1 ----------------------
--- model:add(nn.View(size.x*size.y*channels))
--- model:add(nn.Linear(size.x*size.y*channels, 3))
--- model:add(nn.ReLU())
-
--- give about 85% on test data and 20 epoches
--------------------------------------------

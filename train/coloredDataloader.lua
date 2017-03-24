@@ -48,12 +48,10 @@ coloredDataloader.coloerdLoader = function(config)
       testData.marks[i] = markedStore[toMix[i + trainSize]]:clone()
     end
 
-    collectgarbage()
-
     return {
-      trsize,
-      trainData,
-      testData
+      trsize = trsize,
+      trainData = trainData,
+      testData = testData
     }
   end
 end

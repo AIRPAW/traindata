@@ -6,7 +6,7 @@ require 'optim'
 require 'xlua'
 
 local config = require 'config'
-local t = require 'model'
+local t = require 'mScreenSeg'
 local model = t.model
 local fwmodel = t.model
 local loss = t.loss
@@ -36,16 +36,16 @@ function netLighter(network)
    end
 end
 
-local x = torch.Tensor(config.batchSize,trainData.img:size(2),
-         trainData.img:size(3), trainData.img:size(4))
-local yt = torch.Tensor(config.batchSize)
-local confusion = optim.ConfusionMatrix(config.categories)
+local x = torch.Tensor(config.batchSize,config.channels,
+         config.imagesSize.y, config.imagesSize.x)
+local yt = torch.Tensor(config.batchSize, config.channels,
+         config.imagesSize.y, config.imagesSize.x)
+
 local epoch
 
 local w,dE_dw = model:getParameters()
 
 local function train(TrainData)
-
    epoch = epoch or 1
 
    local time = sys.clock()
@@ -55,7 +55,7 @@ local function train(TrainData)
    print("==> online epoch # " .. epoch)
    for t = 1,TrainData:size(),config.batchSize do
       xlua.progress(t, TrainData:size())
-      collectgarbage()
+      collectgarbage(collect)
 
       if (t + config.batchSize - 1) > TrainData:size() then
          break
@@ -64,7 +64,7 @@ local function train(TrainData)
       local idx = 1
       for i = t,t+config.batchSize-1 do
          x[idx] = TrainData.img[shuffle[i]]
-         yt[idx] = TrainData.labels[shuffle[i]]
+         yt[idx] = TrainData.marks[shuffle[i]]
          idx = idx + 1
       end
 
@@ -75,17 +75,12 @@ local function train(TrainData)
 
          -- evaluate function for complete mini batch
          local y = model:forward(x)
-         --print("y size = " .. y:size()[1])
+         print("y size = " .. y:size()[1])
          local E = loss:forward(y,yt)
-
+         print('E = ' .. E)
          -- estimate df/dW
          local dE_dy = loss:backward(y,yt)
          model:backward(x,dE_dy)
-
-         -- update confusion
-         for i = 1,config.batchSize do
-            confusion:add(y[i],yt[i])
-         end
 
          -- return f and df/dX
          return E,dE_dw
@@ -100,20 +95,19 @@ local function train(TrainData)
    time = time / TrainData:size()
    print("\n==> time to learn 1 sample = " .. (time*1000) .. 'ms')
 
-   print(confusion)
-   if config.with_plotting then
-     plotting.valids[plotting.epoch_ind][2] = confusion.totalValid;
-   end
+  --  print(loss:forward(model:forward(TrainData.img),TrainData.marks))
+  --  if config.with_plotting then
+  --    plotting.valids[plotting.epoch_ind][2] = confusion.totalValid;
+  --  end
 
    -- save/log current net
    local filename = config.modelPath
    os.execute('mkdir -p ' .. sys.dirname(config.modelPath))
    model1 = model:clone()
-  -- netLighter(model1)
+   netLighter(model1)
    torch.save(filename .. 'model', model1)
-
+   model1 = nil
    -- next epoch
-   confusion:zero()
    epoch = epoch + 1
 end
 
