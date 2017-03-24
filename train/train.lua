@@ -101,7 +101,7 @@ local function train(TrainData)
   --  end
 
    -- save/log current net
-   if epoch >= epochnm then
+   if epoch >= config.epochnm then
      local filename = config.modelPath
      os.execute('mkdir -p ' .. sys.dirname(config.modelPath))
      netLighter(model)
