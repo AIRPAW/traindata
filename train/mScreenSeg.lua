@@ -8,6 +8,11 @@ require 'nngraph'
 local config = require 'config'
 local pooling = nn.SpatialMaxPooling(2, 2, 2, 2)
 mScreenSeg = nn.Sequential()
+-- mScreenSeg:add(nn.SpatialConvolution(config.channels, 8, 100, 100))
+-- mScreenSeg:add(nn.ReLU())
+-- mScreenSeg:add(pooling)
+-- mScreenSeg:add(nn.SpatialBatchNormalization(8,1e-05 ,1e-03))
+
 mScreenSeg:add(nn.SpatialConvolution(config.channels, 16, 25, 25))
 mScreenSeg:add(nn.ReLU())
 mScreenSeg:add(pooling)
@@ -28,7 +33,10 @@ mScreenSeg:add(nn.SpatialFullConvolution(32, 16, 15, 15))
 mScreenSeg:add(nn.SpatialMaxUnpooling(pooling))
 mScreenSeg:add(nn.SpatialBatchNormalization(16,1e-05 ,1e-03))
 
-mScreenSeg:add(nn.SpatialFullConvolution(16, config.channels, 25, 25))
+-- mScreenSeg:add(nn.SpatialFullConvolution(16, 8, 25, 25))
+-- mScreenSeg:add(nn.SpatialBatchNormalization(8,1e-05 ,1e-03))
+
+mScreenSeg:add(nn.SpatialFullConvolution(16, config.channels, 100, 100))
 mScreenSeg:add(nn.SpatialBatchNormalization(config.channels,1e-05 ,1e-03))
 
 mScreenSeg:add(nn.SpatialSoftMax())
