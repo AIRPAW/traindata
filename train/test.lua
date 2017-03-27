@@ -1,12 +1,9 @@
-
--- package.path = package.path .. "~/working/traindata/train"
--- package.cpath = package.cpath .. "~/working/traindata/train"
 require 'torch'
 require 'optim'
 require 'xlua'
 
 local config = require 'config'
-local t = require 'model'
+local t = require 'mScreenSeg'
 local model = t.model
 local loss = t.loss
 
@@ -16,12 +13,13 @@ local confusion = optim.ConfusionMatrix(config.categories)
 
 local inputs = torch.Tensor(config.batchSize,testData.img:size(2),
          testData.img:size(3), testData.img:size(4))
-local targets = torch.Tensor(config.batchSize)
+local targets = torch.Tensor(config.batchSize,testData.img:size(2),
+         testData.img:size(3), testData.img:size(4))
 
 function test(TestData)
 
    local time = sys.clock()
-
+   local Eglob = 0
    print(sys.COLORS.red .. '==> testing on test set:')
    for t = 1,TestData:size(),config.batchSize do
 
@@ -34,14 +32,15 @@ function test(TestData)
       local idx = 1
       for i = t,t+config.batchSize-1 do
          inputs[idx] = TestData.img[i]
-         targets[idx] = TestData.labels[i]
+         targets[idx] = TestData.marks[i]
          idx = idx + 1
       end
 
       local preds = model:forward(inputs)
-
       for i = 1,config.batchSize do
-         confusion:add(preds[i], targets[i])
+          E = loss:forward(prdes[i],targets[i])
+          print('E = ' .. E )
+          Eglob = Eglob + E
       end
    end
 
@@ -49,13 +48,11 @@ function test(TestData)
    time = time / TestData:size()
    print("\n==> time to test 1 sample = " .. (time*1000) .. 'ms')
 
-   print(confusion)
+   Eglob = Eglob/(math.floor(TrainData:size()/config.batchSize))
+
    if config.with_plotting then
-     plotting.valids[plotting.epoch_ind][3] = confusion.totalValid;
+     plotting.valids[plotting.epoch_ind][3] = Eglob;
    end
-
-   confusion:zero()
-
 end
 
 return test

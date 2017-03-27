@@ -1,6 +1,6 @@
 localPath         = {
 getLocalPath = function ()
-                  return '/home/ml/traindata/'
+                  return '/home/sbt-voronova-id/traindata/'
                end
 }
 
