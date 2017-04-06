@@ -1,6 +1,6 @@
 localPath         = {
 getLocalPath = function ()
-                  return '/home/sbt-voronova-id/traindata/'
+                  return '/home/ml/train'
                end
 }
 
@@ -15,10 +15,10 @@ local config = {
   modelPath         = localPath.getLocalPath() .. 'models/',
   with_plotting     = false,
   data_file_path    = localPath.getLocalPath() .. 'data/save.dat',
-  pathToImages      = localPath.getLocalPath() .. 'screen/',
+  pathToImages      = localPath.getLocalPath() .. 'Dataset/',
   pathToTestImages  = localPath.getLocalPath() .. 'test_img/',
   categories        = {},
-  imagesSize        = {x = 480, y = 360},
+  imagesSize        = {x = 480, y = 320},
   channels          = 3,
   trainPortion      = 0.7,
 }

@@ -16,9 +16,10 @@ coloredDataloader.coloerdLoader = function(config)
     local markedStore = {}
     local singleImgTensor = torch.Tensor(channels,size.y,size.x)
     local singleMarkTensor = torch.Tensor(channels,size.y,size.x)
+
     for file in paths.iterfiles(trainDir) do
       singleImgTensor = image.load(trainDir .. file)
-      singleMarkTensor = image.load(trainDir .. "marked/" .. file)
+      singleMarkTensor = image.load(trainDir .. "Marked/" .. file)
       table.insert(imgStore, singleImgTensor)
       table.insert(markedStore, singleMarkTensor)
     end
