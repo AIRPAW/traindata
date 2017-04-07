@@ -1,12 +1,12 @@
 localPath         = {
 getLocalPath = function ()
-                  return '/home/ml/train'
+                  return '/home/ml/traindata/'
                end
 }
 
 local config = {
   localPath         = localPath.getLocalPath(),
-  batchSize         = 5,
+  batchSize         = 3,
   momentum          = 0,
   learningRate      = 1e-2,
   weightDecay       = 1e-3,
