@@ -7,14 +7,12 @@ local t = require 'mScreenSeg'
 local model = t.model
 local loss = t.loss
 
-local confusion = optim.ConfusionMatrix(config.categories)
-
 --local testLogger = optim.Logger(paths.concat(config.save, 'test.log'))
 
-local inputs = torch.Tensor(config.batchSize,testData.img:size(2),
-         testData.img:size(3), testData.img:size(4))
-local targets = torch.Tensor(config.batchSize,testData.img:size(2),
-         testData.img:size(3), testData.img:size(4))
+local x = torch.Tensor(config.batchSize,config.channels,
+         config.imagesSize.y, config.imagesSize.x)
+local yt = torch.Tensor(config.batchSize, config.channels,
+         config.imagesSize.y, config.imagesSize.x)
 
 function test(TestData)
 
