@@ -8,7 +8,7 @@ require 'xlua'
 local config = require 'config'
 local t = require 'mScreenSeg'
 local model = t.model
-local fwmodel = t.model
+
 local loss = t.loss
 
 local optimState = {
@@ -36,10 +36,11 @@ function netLighter(network)
    end
 end
 
-local x = torch.Tensor(config.batchSize,config.channels,
+local x = torch.Tensor(1, config.batchSize,config.channels,
          config.imagesSize.y, config.imagesSize.x)
-local yt = torch.Tensor(config.batchSize, config.channels,
+local yt = torch.Tensor(1, config.batchSize, config.channels,
          config.imagesSize.y, config.imagesSize.x)
+print(model:parameters())
 
 local epoch
 
@@ -76,6 +77,7 @@ local function train(TrainData)
 
          -- evaluate function for complete mini batch
          local y = model:forward(x)
+print(model.modules[14].output:size())
          print("y size = " .. y:size()[1])
          local E = loss:forward(y,yt)
          print('E = ' .. E)
@@ -89,7 +91,7 @@ local function train(TrainData)
       end
 
       -- optimize on current mini-batch
-      optim.sgd(eval_E, w, optimState)
+      optim.sgd(eval_E, w, optimState); print(eval_E);
    end
 
    -- time taken
@@ -111,7 +113,7 @@ local function train(TrainData)
      os.execute('mkdir -p ' .. sys.dirname(config.modelPath))
      netLighter(model)
      torch.save(filename .. 'model', model)
-     model1 = nil
+
    end
    -- next epoch
    epoch = epoch + 1

@@ -14,8 +14,8 @@ coloredDataloader.coloerdLoader = function(config)
     local trainPortion = config.trainPortion
     local imgStore = {}
     local markedStore = {}
-    local singleImgTensor = torch.Tensor(channels,size.y,size.x)
-    local singleMarkTensor = torch.Tensor(channels,size.y,size.x)
+    local singleImgTensor = torch.Tensor(1, channels,size.y,size.x)
+    local singleMarkTensor = torch.Tensor(1, channels,size.y,size.x)
 
     for file in paths.iterfiles(trainDir) do
       singleImgTensor = image.load(trainDir .. file)
@@ -28,14 +28,14 @@ coloredDataloader.coloerdLoader = function(config)
     local trainSize = math.floor(toMix:size()[1]*trainPortion)
     local testSize = toMix:size()[1] - trainSize
     local trainData = {
-      img = torch.Tensor(trainSize, channels, size.y,size.x),
-      marks = torch.Tensor(trainSize, channels, size.y,size.x),
+      img = torch.Tensor(trainSize, 1, channels, size.y,size.x),
+      marks = torch.Tensor(trainSize, 1, channels, size.y,size.x),
       size = function() return trainSize end
     }
 
     local testData = {
-      img = torch.Tensor(testSize, channels, size.y,size.x),
-      marks = torch.Tensor(testSize, channels, size.y,size.x),
+      img = torch.Tensor(testSize, 1, channels, size.y,size.x),
+      marks = torch.Tensor(testSize, 1, channels, size.y,size.x),
       size = function() return testSize end
     }
 

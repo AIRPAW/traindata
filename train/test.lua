@@ -9,9 +9,9 @@ local loss = t.loss
 
 --local testLogger = optim.Logger(paths.concat(config.save, 'test.log'))
 
-local x = torch.Tensor(config.batchSize,config.channels,
+local x = torch.Tensor(1, config.batchSize,config.channels,
          config.imagesSize.y, config.imagesSize.x)
-local yt = torch.Tensor(config.batchSize, config.channels,
+local yt = torch.Tensor(1, config.batchSize, config.channels,
          config.imagesSize.y, config.imagesSize.x)
 
 function test(TestData)
@@ -46,7 +46,7 @@ function test(TestData)
    time = time / TestData:size()
    print("\n==> time to test 1 sample = " .. (time*1000) .. 'ms')
 
-   Eglob = Eglob/(math.floor(TrainData:size()/config.batchSize))
+   Eglob = Eglob/(math.floor(TestData:size()/config.batchSize))
 
    if config.with_plotting then
      plotting.valids[plotting.epoch_ind][3] = Eglob;

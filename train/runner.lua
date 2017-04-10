@@ -14,7 +14,7 @@ local segHandler = require "coloredDataloader"
 
 torch.setdefaulttensortype('torch.FloatTensor')
 local train = require 'train'
--- local test = require 'test'
+local test = require 'test'
 
   plotting = {
     valids = {},
