@@ -36,9 +36,9 @@ function netLighter(network)
    end
 end
 
-local x = torch.Tensor(1, config.batchSize,config.channels,
+local x = torch.Tensor(config.batchSize,config.channels,
          config.imagesSize.y, config.imagesSize.x)
-local yt = torch.Tensor(1, config.batchSize, config.channels,
+local yt = torch.Tensor(config.batchSize, config.channels,
          config.imagesSize.y, config.imagesSize.x)
 print(model:parameters())
 

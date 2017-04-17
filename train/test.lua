@@ -9,9 +9,9 @@ local loss = t.loss
 
 --local testLogger = optim.Logger(paths.concat(config.save, 'test.log'))
 
-local x = torch.Tensor(1, config.batchSize,config.channels,
+local x = torch.Tensor(config.batchSize,config.channels,
          config.imagesSize.y, config.imagesSize.x)
-local yt = torch.Tensor(1, config.batchSize, config.channels,
+local yt = torch.Tensor(config.batchSize, config.channels,
          config.imagesSize.y, config.imagesSize.x)
 
 function test(TestData)

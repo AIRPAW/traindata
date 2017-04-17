@@ -6,19 +6,19 @@ getLocalPath = function ()
 
 local config = {
   localPath         = localPath.getLocalPath(),
-  batchSize         = 3,
+  batchSize         = 2,
   momentum          = 0,
   learningRate      = 1e-2,
   weightDecay       = 1e-3,
   learningRateDecay = 1e-7,
-  epochnm           = 50,
+  epochnm           = 100,
   modelPath         = localPath.getLocalPath() .. 'models/',
   with_plotting     = false,
   data_file_path    = localPath.getLocalPath() .. 'data/save.dat',
   pathToImages      = localPath.getLocalPath() .. 'Dataset/',
   pathToTestImages  = localPath.getLocalPath() .. 'Dataset/',
   categories        = {},
-  imagesSize        = {x = 400, y = 230},
+  imagesSize        = {x = 400, y = 240},
   channels          = 3,
   trainPortion      = 0.7,
 }
