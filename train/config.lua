@@ -16,9 +16,9 @@ local config = {
   with_plotting     = false,
   data_file_path    = localPath.getLocalPath() .. 'data/save.dat',
   pathToImages      = localPath.getLocalPath() .. 'Dataset/',
-  pathToTestImages  = localPath.getLocalPath() .. 'test_img/',
+  pathToTestImages  = localPath.getLocalPath() .. 'Dataset/',
   categories        = {},
-  imagesSize        = {x = 480, y = 320},
+  imagesSize        = {x = 400, y = 230},
   channels          = 3,
   trainPortion      = 0.7,
 }

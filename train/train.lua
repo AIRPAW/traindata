@@ -77,7 +77,6 @@ local function train(TrainData)
 
          -- evaluate function for complete mini batch
          local y = model:forward(x)
-print(model.modules[14].output:size())
          print("y size = " .. y:size()[1])
          local E = loss:forward(y,yt)
          print('E = ' .. E)
@@ -91,7 +90,7 @@ print(model.modules[14].output:size())
       end
 
       -- optimize on current mini-batch
-      optim.sgd(eval_E, w, optimState); print(eval_E);
+      optim.sgd(eval_E, w, optimState);
    end
 
    -- time taken
