@@ -48,9 +48,7 @@ function test(TestData)
 
    Eglob = Eglob/(math.floor(TestData:size()/config.batchSize))
    table.insert(lossPrint, Eglob)
-   if epoch >= config.epochnm then
-        torch.save('lossTest.dat', lossPrint)
-   end
+   torch.save('lossTest.dat', lossPrint)
    if config.with_plotting then
      plotting.valids[plotting.epoch_ind][3] = Eglob;
    end

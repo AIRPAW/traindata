@@ -41,7 +41,7 @@ mScreenSeg:add(nn.SpatialBatchNormalization(8,1e-05 ,1e-03))
 mScreenSeg:add(nn.SpatialFullConvolution(8, config.channels, 100, 100))
 mScreenSeg:add(nn.SpatialSoftMax())
 
-loss = nn.SmoothL1Criterion()
+loss = nn.AbsCriterion()
 
 return {
  model = mScreenSeg,

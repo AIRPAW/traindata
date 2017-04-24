@@ -109,6 +109,7 @@ local function train(TrainData)
      print('start saving...')
      local filename = config.modelPath
      os.execute('mkdir -p ' .. sys.dirname(config.modelPath))
+     torch.save('parameters.dat', model.parameters)
      model:clearState()
      msave = model:clone()
      netLighter(msave)
