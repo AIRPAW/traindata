@@ -6,12 +6,12 @@ getLocalPath = function ()
 
 local config = {
   localPath         = localPath.getLocalPath(),
-  batchSize         = 2,
+  batchSize         = 4,
   momentum          = 0,
   learningRate      = 1e-2,
   weightDecay       = 1e-3,
   learningRateDecay = 1e-7,
-  epochnm           = 100,
+  epochnm           = 2,
   modelPath         = localPath.getLocalPath() .. 'models/',
   with_plotting     = false,
   data_file_path    = localPath.getLocalPath() .. 'data/save.dat',

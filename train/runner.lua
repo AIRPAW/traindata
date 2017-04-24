@@ -13,6 +13,7 @@ local segHandler = require "coloredDataloader"
 
 
 torch.setdefaulttensortype('torch.FloatTensor')
+torch.setnumthreads(16)
 local train = require 'train'
 local test = require 'test'
 

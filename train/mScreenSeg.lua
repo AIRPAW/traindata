@@ -43,8 +43,6 @@ mScreenSeg:add(nn.SpatialSoftMax())
 
 loss = nn.SmoothL1Criterion()
 
-print("Model data:")
-print(mScreenSeg)
 return {
  model = mScreenSeg,
  loss = loss

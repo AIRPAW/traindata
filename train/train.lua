@@ -4,11 +4,10 @@
 require 'torch'
 require 'optim'
 require 'xlua'
-
+require 'nn'
 local config = require 'config'
 local t = require 'mScreenSeg'
-local model = t.model
-
+local model  = t.model
 local loss = t.loss
 
 local optimState = {
@@ -40,7 +39,7 @@ local x = torch.Tensor(config.batchSize,config.channels,
          config.imagesSize.y, config.imagesSize.x)
 local yt = torch.Tensor(config.batchSize, config.channels,
          config.imagesSize.y, config.imagesSize.x)
-print(model:parameters())
+local lossPrint = {}
 
 local epoch
 
@@ -77,9 +76,7 @@ local function train(TrainData)
 
          -- evaluate function for complete mini batch
          local y = model:forward(x)
-         print("y size = " .. y:size()[1])
          local E = loss:forward(y,yt)
-         print('E = ' .. E)
          Eglob =  Eglob + E
          -- estimate df/dW
          local dE_dy = loss:backward(y,yt)
@@ -99,21 +96,24 @@ local function train(TrainData)
    print("\n==> time to learn 1 sample = " .. (time*1000) .. 'ms')
 
    Eglob = Eglob/(math.floor(TrainData:size()/config.batchSize))
-
-  --  print(loss:forward(model:forward(TrainData.img),TrainData.marks))
+   table.insert(lossPrint, Eglob)
+   print('E = ' .. Eglob)
    if config.with_plotting then
      plotting.valids[plotting.epoch_ind][2] = Eglob;
    end
 
    -- save/log current net
-   if epoch >= config.epochnm then
+     if epoch >= config.epochnm then
+        torch.save('lossTrain.dat', lossPrint)
+     end
      print('start saving...')
      local filename = config.modelPath
      os.execute('mkdir -p ' .. sys.dirname(config.modelPath))
-     netLighter(model)
-     torch.save(filename .. 'model', model)
-
-   end
+     model:clearState()
+     msave = model:clone()
+     netLighter(msave)
+     torch.save(filename .. 'model.t7', msave)
+     msave = nil
    -- next epoch
    epoch = epoch + 1
 end

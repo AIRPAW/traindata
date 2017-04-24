@@ -9,8 +9,8 @@ require 'nngraph'
 
 local config = require 'config'
 
-local model_file = config.modelPath .. 'model'
-local test_path = config.pathToTestImages
+local model_file =   config.modelPath .. 'model.t7'
+local test_path = '/home/ml/traindata/'
 
 torch.setdefaulttensortype('torch.FloatTensor')
 local channels = config.channels
@@ -21,7 +21,7 @@ local name_img = arg[1]
  local m = torch.load(model_file)
  local input = image.load(test_path .. name_img)
  local inp = torch.Tensor(input)
- local predicted =  torch.Tensor(1, config.channels, config.imagesSize.x, config.imagesSize.y)
+ local predicted =  torch.Tensor(config.channels, config.imagesSize.x, config.imagesSize.y)
  m:evaluate()
  predicted = m:forward(inp)
 torch.save('predicted.dat', predicted)
