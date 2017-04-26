@@ -37,7 +37,7 @@ end
 
 local x = torch.Tensor(config.batchSize,config.channels,
          config.imagesSize.y, config.imagesSize.x)
-local yt = torch.Tensor(config.batchSize, config.channels,
+local yt = torch.Tensor(config.batchSize, 1,
          config.imagesSize.y, config.imagesSize.x)
 local lossPrint = {}
 

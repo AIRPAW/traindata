@@ -11,7 +11,7 @@ local loss = t.loss
 
 local inputs  = torch.Tensor(config.batchSize,config.channels,
          config.imagesSize.y, config.imagesSize.x)
-local targets  = torch.Tensor(config.batchSize, config.channels,
+local targets  = torch.Tensor(config.batchSize, 1,
          config.imagesSize.y, config.imagesSize.x)
 local lossPrint = {}
 

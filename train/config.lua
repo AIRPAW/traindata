@@ -19,7 +19,7 @@ local config = {
   pathToTestImages  = localPath.getLocalPath() .. 'Dataset/',
   categories        = {},
   imagesSize        = {x = 400, y = 240},
-  channels          = 3,
+  channels          = 1,
   trainPortion      = 0.7,
 }
 
